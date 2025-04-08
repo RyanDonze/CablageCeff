@@ -1,19 +1,19 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:CâblageCeff.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="CâblageCeff.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/CeffWeb.png"
+        x:Class="CâblageCeff.PatchWindow"
+         Icon="/Assets/CeffWeb.png"
         Title="CâblageCeff" Width="800" Height="450">
 
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
+	<!--xmlns:vm="using:CâblageCeff.ViewModels"-->
+	
+	<!--
+	<Design.DataContext>
+		<vm:PatchWindowViewModel/>
+	</Design.DataContext>
+	-->
 
 	<Grid>
 		<!-- Définition des colonnes et lignes pour la disposition -->
@@ -39,27 +39,6 @@
 				<Grid.RowDefinitions>
 					<RowDefinition Height="32"/>
 				</Grid.RowDefinitions>
-
-				<Menu DockPanel.Dock="Top" Background="#2c3e50" Foreground="White">
-					<MenuItem Header="Fichier"  Foreground="White">
-						<MenuItem Header="Ouvrir"/>
-						<MenuItem Header="Enregistrer"/>
-						<MenuItem Header="Enregistrer sous ..."/>
-						<Separator/>
-						<MenuItem Header="Paramètres"/>
-					</MenuItem>
-					<MenuItem Header="Edition"  Foreground="White">
-						<MenuItem Header="Couper"/>
-						<MenuItem Header="Copier"/>
-						<MenuItem Header="Coller"/>
-					</MenuItem>
-					<MenuItem Header="Aide"  Foreground="White">
-						<MenuItem Header="Outils"/>
-						<MenuItem Header="Changer de Thème" Command="{Binding ChangeThemeCommand}">
-						</MenuItem>
-					</MenuItem>
-				</Menu>
-
 				<Image Grid.Column="1" HorizontalAlignment="Right"  Height="45" Width="45" Source="/Assets/LogoCeffAlpha.png"/>
 
 			</Grid>
@@ -72,42 +51,24 @@
 				<ColumnDefinition Width="Auto"/>
 				<ColumnDefinition Width="Auto"/>
 				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="Auto"/>
 			</Grid.ColumnDefinitions>
 			<Rectangle Grid.ColumnSpan="7" Fill="#7c8ea0" Height="55"/>
-			<Button x:Name="Open_Button" Background="#e1e1e1" Width="45" Height="45" Margin="5">
-				<Image Height="40" Width="40" Source="/Assets/open-file.png"/>
-			</Button>
-			<Button Grid.Column="1" Background="#e1e1e1" Width="45" Height="45" Margin="5">
-				<Image Height="35" Width="35" Source="/Assets/save.png"/>
-			</Button>
-			<Button Grid.Column="2" Background="#e1e1e1" Width="45" Height="45" Margin="5">
-				<Image Height="35" Width="35" Source="/Assets/saveAs.png"/>
-			</Button>
-			<Button Grid.Column="3" Background="#e1e1e1" Width="45" Height="45" Margin="5">
+			<Button Background="#e1e1e1" Width="45" Height="45" Margin="5">
 				<Image Height="40" Width="40" Source="/Assets/rowAdd.png"/>
 			</Button>
-			<Button Grid.Column="4" Background="#e1e1e1" Width="45" Height="45" Margin="5">
+			<Button Grid.Column="1" Background="#e1e1e1" Width="45" Height="45" Margin="5">
 				<Image Height="40" Width="40" Source="/Assets/rowRemove.png"/>
 			</Button>
-			<Button Grid.Column="5" Background="#e1e1e1" Width="45" Height="45" Margin="5">
+			<Button Grid.Column="2" Background="#e1e1e1" Width="45" Height="45" Margin="5">
 				<Image Height="35" Width="35" Source="/Assets/rowUpdate.png"/>
 			</Button>
-			<Button Grid.Column="6" Command="{Binding OpenPatchScreenCommand}" Background="#e1e1e1" Width="45" Height="45" Margin="5">
-				<Image Height="35" Width="35" Source="/Assets/enter.png"/>
+			<Button Grid.Column="3" Background="#e1e1e1" Width="45" Height="45" Margin="5">
+				<Image Height="35" Width="35" Source="/Assets/exit.png"/>
 			</Button>
 		</Grid>
-
-		<!--
-		<Grid Grid.Row="3" >
-			<TextBlock Text="Patch Panels" Grid.Row="2" Margin="5" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold"/>
-		</Grid>
-		-->
-
+		
 		<Grid Grid.Row="2" Background="#4c5e70">
-			<TextBlock Text="Patch Panels" Foreground="White" Margin="5" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold"/>
+			<TextBlock Text="BD59.8 Patchs" Foreground="White" Margin="5" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold"/>
 		</Grid>
 
 		<!-- DataGrid -->
@@ -122,9 +83,11 @@
                   BorderThickness="2" BorderBrush="#5c6e80" Margin="2">
 			<DataGrid.Columns>
 				<DataGridTextColumn Header="Nom" Width="Auto"/>
-				<DataGridTextColumn Header="Bâtiment" Width="Auto"/>
+				<DataGridTextColumn Header="Nom Panel" Width="Auto"/>
+				<DataGridTextColumn Header="Type de patch" Width="Auto"/>
 				<DataGridTextColumn Header="Emplacement" Width="Auto" />
-				<DataGridTextColumn Header="Nbre de port" Width="Auto" />
+				<DataGridTextColumn Header="Destination" Width="Auto"/>
+				<DataGridTextColumn Header="Description" Width="Auto" />
 			</DataGrid.Columns>
 
 			<!-- Ajout de survol et de couleurs alternées pour les lignes -->
@@ -146,7 +109,8 @@
 
 		<!-- Affichage du nombre de patch panels -->
 		<Grid Background="#4c5e70" Grid.Row="4">
-		<TextBlock Text="39 patch panel(s)"  Margin="10" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontWeight="Bold" Foreground="White"/>
+		<TextBlock Text="16 patch(s)" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontWeight="Bold" Foreground="White"/>
 		</Grid>
 	</Grid>
+	
 </Window>
