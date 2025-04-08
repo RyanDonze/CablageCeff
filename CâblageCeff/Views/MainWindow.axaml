@@ -15,6 +15,114 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+	<Grid>
+		<!-- Définition des colonnes et lignes pour la disposition -->
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="Auto"/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
 
+		<!-- Menu -->
+		<DockPanel VerticalAlignment="Top">
+			<Menu DockPanel.Dock="Top" Background="#2c3e50" Foreground="White">
+				<MenuItem Header="Fichier"  Foreground="White">
+					<MenuItem Header="Ouvrir"/>
+					<MenuItem Header="Enregistrer"/>
+					<MenuItem Header="Enregistrer sous ..."/>
+					<Separator/>
+					<MenuItem Header="Paramètres"/>
+				</MenuItem>
+				<MenuItem Header="Edition"  Foreground="White">
+					<MenuItem Header="Couper"/>
+					<MenuItem Header="Copier"/>
+					<MenuItem Header="Coller"/>
+				</MenuItem>
+				<MenuItem Header="Aide"  Foreground="White">
+					<MenuItem Header="Outils"/>
+					<MenuItem Header="Changer de Thème"/>
+				</MenuItem>
+				<Image HorizontalAlignment="Right"  Height="45" Width="45" Source="/Assets/LogoCeffAlpha.png"/>
+			</Menu>
+		</DockPanel>
+
+		<!-- Barre d'outils -->
+		<Grid Grid.Row="1" Background="#5c6e80">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+			</Grid.ColumnDefinitions>
+			<Rectangle Grid.ColumnSpan="6" Fill="#6c7e90" Height="55"/>
+			<Button x:Name="Open_Button" Background="#e1e1e1" Width="45" Height="45" Margin="5">
+				<Image Height="35" Width="35" Source="/Assets/avalonia-logo.ico"/>
+			</Button>
+			<Button Grid.Column="1" Background="#e1e1e1" Width="45" Height="45" Margin="5">
+				<Image Height="35" Width="35" Source="/Assets/avalonia-logo.ico"/>
+			</Button>
+			<Button Grid.Column="2" Background="#e1e1e1" Width="45" Height="45" Margin="5">
+				<Image Height="35" Width="35" Source="/Assets/avalonia-logo.ico"/>
+			</Button>
+			<Button Grid.Column="3" Background="#e1e1e1" Width="45" Height="45" Margin="5">
+				<Image Height="35" Width="35" Source="/Assets/avalonia-logo.ico"/>
+			</Button>
+			<Button Grid.Column="4" Background="#e1e1e1" Width="45" Height="45" Margin="5">
+				<Image Height="35" Width="35" Source="/Assets/avalonia-logo.ico"/>
+			</Button>
+			<Button Grid.Column="5" Background="#e1e1e1" Width="45" Height="45" Margin="5">
+				<Image Height="35" Width="35" Source="/Assets/avalonia-logo.ico"/>
+			</Button>
+		</Grid>
+
+		<!-- DataGrid -->
+		<DataGrid Grid.Row="2"
+                  Name="PatchtDataGrid" IsReadOnly="True"
+                  Background="White"
+                  RowHeight="30"
+                  CanUserReorderColumns="True"
+                  CanUserResizeColumns="True"
+                  CanUserSortColumns="True"
+                  GridLinesVisibility="All"
+                  BorderThickness="0" BorderBrush="Transparent">
+			<DataGrid.Columns>
+				<DataGridTextColumn Header="Titre" Width="Auto"/>
+				<DataGridTextColumn Header="Nom" Width="Auto"/>
+				<DataGridTextColumn Header="Prenom" Width="Auto" />
+				<DataGridTextColumn Header="Rue et N°" Width="Auto" />
+				<DataGridTextColumn Header="NPA" Width="Auto"/>
+				<DataGridTextColumn Header="Localité" Width="Auto"/>
+				<DataGridTextColumn Header="Canton" Width="Auto"/>
+				<DataGridTextColumn Header="E-Mail" Width="Auto" />
+				<DataGridTextColumn Header="Tél privé" Width="Auto" />
+				<DataGridTextColumn Header="Tél portable" Width="Auto"/>
+			</DataGrid.Columns>
+
+			<!-- Ajout de survol et de couleurs alternées pour les lignes -->
+			<DataGrid.Styles>
+				<Style Selector="DataGridRow">
+					<Style.Setters>
+						<Setter Property="Background" Value="#ecf0f1"/>
+						<Setter Property="BorderBrush" Value="#bdc3c7"/>
+					</Style.Setters>
+				</Style>
+				<Style Selector="DataGridRow:hover">
+					<Style.Setters>
+						<Setter Property="Background" Value="#3498db"/>
+						<Setter Property="Foreground" Value="White"/>
+					</Style.Setters>
+				</Style>
+			</DataGrid.Styles>
+		</DataGrid>
+
+		<!-- Affichage du nombre de contacts -->
+		<TextBlock Text="{Binding Greeting}" Grid.Row="3" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontWeight="Bold"/>
+	</Grid>
 </Window>
