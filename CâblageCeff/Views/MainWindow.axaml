@@ -102,6 +102,7 @@
 		<!-- DataGrid -->
 		<DataGrid Grid.Row="2"
                   Name="PatchtDataGrid" IsReadOnly="True"
+				  ItemsSource="{Binding Panels}"
                   Background="White"
                   RowHeight="30"
                   CanUserReorderColumns="True"
