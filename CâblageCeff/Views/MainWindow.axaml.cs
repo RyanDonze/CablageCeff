@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using CâblageCeff.Models;
 using CâblageCeff.ViewModels;
 using System;
 using System.Threading.Tasks;
@@ -20,9 +21,12 @@ namespace CâblageCeff.Views
                 vm.ShowPatchDialog = ShowPatchDialog;
             }
         }
-        private async Task ShowPatchDialog()
+
+        private async Task ShowPatchDialog(Models.Panel panel)
         {
-            var contactDialog = new PatchWindow();
+            if (panel == null)
+                return;
+            var contactDialog = new PatchWindow(panel);
             await contactDialog.ShowDialog(this);
         }
     }

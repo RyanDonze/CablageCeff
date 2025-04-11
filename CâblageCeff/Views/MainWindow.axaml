@@ -90,13 +90,13 @@
 			<Button Grid.Column="3" Background="#e1e1e1" Width="45" Height="45" Margin="5">
 				<Image Height="40" Width="40" Source="/Assets/rowAdd.png"/>
 			</Button>
-			<Button Grid.Column="4" Background="#e1e1e1" Width="45" Height="45" Margin="5">
+			<Button Grid.Column="4" Command="{Binding DeletePanelCommand}" CommandParameter="{Binding #PanelDataGrid.SelectedItems}" Background="#e1e1e1" Width="45" Height="45" Margin="5" >
 				<Image Height="40" Width="40" Source="/Assets/rowRemove.png"/>
 			</Button>
 			<Button Grid.Column="5" Background="#e1e1e1" Width="45" Height="45" Margin="5">
 				<Image Height="35" Width="35" Source="/Assets/rowUpdate.png"/>
 			</Button>
-			<Button Grid.Column="6" Command="{Binding OpenPatchScreenCommand}" Background="#e1e1e1" Width="45" Height="45" Margin="5">
+			<Button Grid.Column="6" Command="{Binding OpenPatchScreenCommand}" CommandParameter="{Binding #PanelDataGrid.SelectedItem}" Background="#e1e1e1" Width="45" Height="45" Margin="5">
 				<Image Height="35" Width="35" Source="/Assets/enter.png"/>
 			</Button>
 		</Grid>
@@ -113,9 +113,8 @@
 
 		<!-- DataGrid -->
 		<DataGrid Grid.Row="3"
-                  Name="PatchtDataGrid" IsReadOnly="True"
+                  Name="PanelDataGrid" IsReadOnly="True"
 				  ItemsSource="{Binding Panels}"
-                  Background="White"
                   RowHeight="30"
                   CanUserReorderColumns="True"
                   CanUserResizeColumns="True"
@@ -128,23 +127,8 @@
 				<DataGridTextColumn Header="Emplacement" Width="Auto" Binding="{Binding Emplacement}"/>
 				<DataGridTextColumn Header="Nbre de port" Width="Auto" Binding="{Binding NbrPort}"/>
 			</DataGrid.Columns>
-
-			<!-- Ajout de survol et de couleurs alternées pour les lignes -->
-			<DataGrid.Styles>
-				<Style Selector="DataGridRow">
-					<Style.Setters>
-						<Setter Property="Background" Value="#ecf0f1"/>
-						<Setter Property="BorderBrush" Value="#bdc3c7"/>
-					</Style.Setters>
-				</Style>
-				<Style Selector="DataGridRow:hover">
-					<Style.Setters>
-						<Setter Property="Background" Value="#3498db"/>
-						<Setter Property="Foreground" Value="White"/>
-					</Style.Setters>
-				</Style>
-			</DataGrid.Styles>
 		</DataGrid>
+		
 
 		<!-- Affichage du nombre de patch panels -->
 		<Grid Background="#4c5e70" Grid.Row="4">
