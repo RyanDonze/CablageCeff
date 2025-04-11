@@ -26,7 +26,7 @@ namespace CâblageCeff.ViewModels
         
         public  MainWindowViewModel()
         {
-            
+
             List<Panel> panels = [];
             List<string> subs = [];
 
@@ -34,9 +34,9 @@ namespace CâblageCeff.ViewModels
             pkg = new ExcelPackage(file);
             ws = pkg.Workbook.Worksheets.First();
 
-            for (int i = 1; i <= 330;i++)
+            for (int i = 1; i <= 330; i++)
             {
-                for (int j = 0; j <= 4;j++)
+                for (int j = 0; j <= 4; j++)
                 {
                     if (ws.Cells[i, j] == null)
                         break;
@@ -45,11 +45,10 @@ namespace CâblageCeff.ViewModels
                 Panel panel = new(subs[0], subs[1], subs[2], int.Parse(subs[3]));
                 panels.Add(panel);
                 subs.Clear();
-            } 
-            
+            }
+
             Panels = panels;
         }
-        public string Greeting { get; } = "Welcome to Avalonia!";
 
         public delegate Task ShowPatchDialogFunc();
         public ShowPatchDialogFunc? ShowPatchDialog { get; set; }
