@@ -114,6 +114,7 @@
 		<!-- DataGrid -->
 		<DataGrid Grid.Row="3"
                   Name="PatchtDataGrid" IsReadOnly="True"
+				  ItemsSource="{Binding Panels}"
                   Background="White"
                   RowHeight="30"
                   CanUserReorderColumns="True"

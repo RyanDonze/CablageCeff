@@ -6,6 +6,7 @@ using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using CâblageCeff.ViewModels;
 using CâblageCeff.Views;
+using OfficeOpenXml;
 
 namespace CâblageCeff
 {
@@ -13,6 +14,7 @@ namespace CâblageCeff
     {
         public override void Initialize()
         {
+            ExcelPackage.License.SetNonCommercialPersonal(Name);
             AvaloniaXamlLoader.Load(this);
         }
 
