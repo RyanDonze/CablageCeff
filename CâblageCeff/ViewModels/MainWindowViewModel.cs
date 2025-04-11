@@ -11,6 +11,7 @@ using Avalonia;
 using Avalonia.Styling;
 using CommunityToolkit.Mvvm.Input;
 using System.Threading.Tasks;
+using System.Collections;
 
 namespace CâblageCeff.ViewModels
 {
@@ -26,14 +27,18 @@ namespace CâblageCeff.ViewModels
         ExcelPackage pkg;
         ExcelWorksheet ws;
         Panel? panel;
-        
+
+        // UI Dialogs
+        public delegate Task ShowPatchDialogFunc(Panel panel);
+        public ShowPatchDialogFunc? ShowPatchDialog { get; set; }
+
         public  MainWindowViewModel()
         {
-            
+
             List<Panel> panels = [];
             List<string> subs = [];
 
-            FileInfo file = new("C:\\Users\\cp-23rul\\Source\\Repos\\CablageCeff\\CâblageCeff\\Assets\\Liste des patch panel et numéro.xlsx");
+            FileInfo file = new("Assets//Liste des patch panel et numéro.xlsx");
             if(file.Exists)
             {
                 file = new FileInfo(file.FullName);
@@ -66,22 +71,19 @@ namespace CâblageCeff.ViewModels
                 }
                 panels.Add(panel);
                 subs.Clear();
-            } 
-            
+            }
+
             Panels = panels;
             PanelCount = $"{panels.Count} patch panel(s)";
         }
-        public string Greeting { get; } = "Welcome to Avalonia!";
-
-        public delegate Task ShowPatchDialogFunc();
-        public ShowPatchDialogFunc? ShowPatchDialog { get; set; }
 
         [RelayCommand]
-        private async Task OpenPatchScreen()
+        private async Task OpenPatchScreen(Object c)
         {
-            if (ShowPatchDialog == null)
+            var panel = c as Panel;
+            if (panel == null || ShowPatchDialog == null)
                 return;
-            await ShowPatchDialog();
+            await ShowPatchDialog(panel);
         }
 
         [RelayCommand]
@@ -96,6 +98,27 @@ namespace CâblageCeff.ViewModels
         private void Quitter()
         {
             Environment.Exit(0);
+        }
+
+        [RelayCommand]
+        private void DeletePanel(IList list)
+        {
+            var panelsToRemove = new Panel?[list.Count];
+            for (int i = 0; i < list.Count; i++)
+            {
+                panelsToRemove[i] = list[i] as Panel;
+            }
+            var panels = Panels?.ToList();
+            foreach (var c in panelsToRemove)
+            {
+                if (c != null)
+                    //panels?.Remove(c);
+                    panels[panels.IndexOf(c)].Batiment = "";
+                    panels[panels.IndexOf(c)].Emplacement = "";
+                    panels[panels.IndexOf(c)].NbrPort = 0;
+            }
+            Panels = panels;
+            PanelCount = $"{Panels?.Count} contact(s)";
         }
     }
 }
