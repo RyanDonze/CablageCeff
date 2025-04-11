@@ -1,8 +1,15 @@
-﻿namespace CâblageCeff.ViewModels
+﻿using CommunityToolkit.Mvvm.Input;
+using System;
+
+namespace CâblageCeff.ViewModels
 {
     public partial class PatchWindowViewModel : ViewModelBase
     {
-        public string Greeting { get; } = "Welcome to Avalonia!";
+        [RelayCommand]
+        private void Quitter()
+        {
+            Environment.Exit(0);
+        }
     }
 }
 

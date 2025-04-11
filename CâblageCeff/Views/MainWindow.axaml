@@ -7,7 +7,8 @@
         x:Class="CâblageCeff.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/CeffWeb.png"
-        Title="CâblageCeff" Width="800" Height="450">
+        Title="CâblageCeff" Width="800" Height="450"
+		DataContextChanged="RegisterInteractions">
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
@@ -55,8 +56,8 @@
 					</MenuItem>
 					<MenuItem Header="Aide"  Foreground="White">
 						<MenuItem Header="Outils"/>
-						<MenuItem Header="Changer de Thème" Command="{Binding ChangeThemeCommand}">
-						</MenuItem>
+						<MenuItem Header="Changer de Thème" Command="{Binding ChangeThemeCommand}"/>
+						<MenuItem Header="Quitter" Command="{Binding QuitterCommand}"/>
 					</MenuItem>
 				</Menu>
 
@@ -111,7 +112,7 @@
 		</Grid>
 
 		<!-- DataGrid -->
-		<DataGrid Grid.Row="2"
+		<DataGrid Grid.Row="3"
                   Name="PatchtDataGrid" IsReadOnly="True"
                   Background="White"
                   RowHeight="30"
@@ -121,10 +122,10 @@
                   GridLinesVisibility="All"
                   BorderThickness="2" BorderBrush="#5c6e80" Margin="2">
 			<DataGrid.Columns>
-				<DataGridTextColumn Header="Nom" Width="Auto"/>
-				<DataGridTextColumn Header="Bâtiment" Width="Auto"/>
-				<DataGridTextColumn Header="Emplacement" Width="Auto" />
-				<DataGridTextColumn Header="Nbre de port" Width="Auto" />
+				<DataGridTextColumn Header="Nom" Width="Auto" Binding="{Binding Nom}"/>
+				<DataGridTextColumn Header="Bâtiment" Width="Auto" Binding="{Binding Batiment}"/>
+				<DataGridTextColumn Header="Emplacement" Width="Auto" Binding="{Binding Emplacement}"/>
+				<DataGridTextColumn Header="Nbre de port" Width="Auto" Binding="{Binding NbrPort}"/>
 			</DataGrid.Columns>
 
 			<!-- Ajout de survol et de couleurs alternées pour les lignes -->
