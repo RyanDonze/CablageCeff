@@ -72,7 +72,7 @@
 		</Grid>
 
 		<!-- DataGrid -->
-		<DataGrid Grid.Row="2"
+		<DataGrid Grid.Row="3"
                   Name="PatchtDataGrid" IsReadOnly="True"
                   Background="White"
                   RowHeight="30"

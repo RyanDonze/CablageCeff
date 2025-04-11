@@ -19,10 +19,13 @@ namespace CâblageCeff.ViewModels
         [ObservableProperty]
         private List<Panel>? panels;
 
-        
+        [ObservableProperty]
+        private string? panelCount;
+
 
         ExcelPackage pkg;
         ExcelWorksheet ws;
+        Panel? panel;
         
         public  MainWindowViewModel()
         {
@@ -30,24 +33,43 @@ namespace CâblageCeff.ViewModels
             List<Panel> panels = [];
             List<string> subs = [];
 
-            FileInfo file = new("avares://CâblageCeff/Assets/Liste des patch panel et numéro.xlsx");
-            pkg = new ExcelPackage(file);
-            ws = pkg.Workbook.Worksheets.First();
-
-            for (int i = 1; i <= 330;i++)
+            FileInfo file = new("C:\\Users\\cp-23rul\\Source\\Repos\\CablageCeff\\CâblageCeff\\Assets\\Liste des patch panel et numéro.xlsx");
+            if(file.Exists)
             {
-                for (int j = 0; j <= 4;j++)
+                file = new FileInfo(file.FullName);
+                pkg = new ExcelPackage(file);
+                if (pkg.Workbook.Worksheets.Any())
+                    ws = pkg.Workbook.Worksheets.First();
+                else
+                    throw new InvalidOperationException("The Excel file contains no worksheets.");
+            }
+            else
+                throw new FileNotFoundException("The specified file does not exist.", file.FullName);
+            
+            
+            for (int i = 2; i <= 330;i++)
+            {
+                for (int j = 1; j <= 4;j++)
                 {
+                    
                     if (ws.Cells[i, j] == null)
                         break;
-                    subs[j] = ws.Cells[i, j].ToString();
+                    subs.Add(ws.Cells[i, j].Text);
                 }
-                Panel panel = new(subs[0], subs[1], subs[2], int.Parse(subs[3]));
+                if (subs[3] == "")
+                {
+                    panel = new(subs[0], subs[1], subs[2], 0);
+                }
+                else
+                {
+                    panel = new(subs[0], subs[1], subs[2], int.Parse(subs[3]));
+                }
                 panels.Add(panel);
                 subs.Clear();
             } 
             
             Panels = panels;
+            PanelCount = $"{panels.Count} patch panel(s)";
         }
         public string Greeting { get; } = "Welcome to Avalonia!";
 
