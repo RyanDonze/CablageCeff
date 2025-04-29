@@ -78,22 +78,19 @@
 				<ColumnDefinition Width="Auto"/>
 			</Grid.ColumnDefinitions>
 			<Rectangle Grid.ColumnSpan="7" Fill="#7c8ea0" Height="55"/>
-			<Button x:Name="Open_Button" Background="#e1e1e1" Width="45" Height="45" Margin="5">
-				<Image Height="40" Width="40" Source="/Assets/open-file.png"/>
-			</Button>
 			<Button Grid.Column="1" Background="#e1e1e1" Width="45" Height="45" Margin="5">
 				<Image Height="35" Width="35" Source="/Assets/save.png"/>
 			</Button>
 			<Button Grid.Column="2" Background="#e1e1e1" Width="45" Height="45" Margin="5">
 				<Image Height="35" Width="35" Source="/Assets/saveAs.png"/>
 			</Button>
-			<Button Grid.Column="3" Background="#e1e1e1" Width="45" Height="45" Margin="5">
+			<Button Grid.Column="3" Command="{Binding AddPanelCommand}" Background="#e1e1e1" Width="45" Height="45" Margin="5">
 				<Image Height="40" Width="40" Source="/Assets/rowAdd.png"/>
 			</Button>
 			<Button Grid.Column="4" Command="{Binding DeletePanelCommand}" CommandParameter="{Binding #PanelDataGrid.SelectedItems}" Background="#e1e1e1" Width="45" Height="45" Margin="5" >
 				<Image Height="40" Width="40" Source="/Assets/rowRemove.png"/>
 			</Button>
-			<Button Grid.Column="5" Background="#e1e1e1" Width="45" Height="45" Margin="5">
+			<Button Grid.Column="5" Command="{Binding EditPanelCommand}" CommandParameter="{Binding #PanelDataGrid.SelectedItem}" Background="#e1e1e1" Width="45" Height="45" Margin="5">
 				<Image Height="35" Width="35" Source="/Assets/rowUpdate.png"/>
 			</Button>
 			<Button Grid.Column="6" Command="{Binding OpenPatchScreenCommand}" CommandParameter="{Binding #PanelDataGrid.SelectedItem}" Background="#e1e1e1" Width="45" Height="45" Margin="5">

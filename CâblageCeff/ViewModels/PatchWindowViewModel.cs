@@ -34,6 +34,7 @@ namespace CâblageCeff.ViewModels
         {
             panel = p;
             panelName = $"{p.Batiment}.{p.Emplacement}.{p.Nom} Patchs";
+            panelNbr = $"{p.NbrPort} patch(s)";
             window = patchWindow;
 
             List<Patch> patchs = [];
