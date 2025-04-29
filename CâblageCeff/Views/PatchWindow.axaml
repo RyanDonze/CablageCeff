@@ -76,24 +76,24 @@
 		<DataGrid Grid.Row="3"
                   Name="PatchtDataGrid" IsReadOnly="True"
                   RowHeight="30"
+			      ItemsSource="{Binding Patchs}"
                   CanUserReorderColumns="True"
                   CanUserResizeColumns="True"
                   CanUserSortColumns="True"
                   GridLinesVisibility="All"
                   BorderThickness="2" BorderBrush="#5c6e80" Margin="2">
 			<DataGrid.Columns>
-				<DataGridTextColumn Header="Nom" Width="Auto"/>
-				<DataGridTextColumn Header="Nom Panel" Width="Auto"/>
-				<DataGridTextColumn Header="Type de patch" Width="Auto"/>
-				<DataGridTextColumn Header="Emplacement" Width="Auto" />
-				<DataGridTextColumn Header="Destination" Width="Auto"/>
-				<DataGridTextColumn Header="Description" Width="Auto" />
+				<DataGridTextColumn Header="Nom" Width="Auto" Binding="{Binding Nom}"/>
+				<DataGridTextColumn Header="Type de patch" Width="Auto" Binding="{Binding Type}"/>
+				<DataGridTextColumn Header="Emplacement" Width="Auto" Binding="{Binding Emplacement}"/>
+				<DataGridTextColumn Header="Destination" Width="Auto" Binding="{Binding Destination}"/>
+				<DataGridTextColumn Header="Description" Width="Auto" Binding="{Binding Description}"/>
 			</DataGrid.Columns>
 		</DataGrid>
 
 		<!-- Affichage du nombre de patch panels -->
 		<Grid Background="#4c5e70" Grid.Row="4">
-		<TextBlock Text="{Binding PanelNbr}" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontWeight="Bold" Foreground="White"/>
+		<TextBlock Text="{Binding PatchCount}" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontWeight="Bold" Foreground="White"/>
 		</Grid>
 	</Grid>
 	

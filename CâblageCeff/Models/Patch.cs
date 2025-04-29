@@ -12,8 +12,6 @@ namespace CâblageCeff.Models
         [ObservableProperty]
         private string? nom;
         [ObservableProperty]
-        private string? nomPanel;
-        [ObservableProperty]
         private string? type;
         [ObservableProperty]
         private string? emplacement;
@@ -22,10 +20,9 @@ namespace CâblageCeff.Models
         [ObservableProperty]
         private string? description;
 
-        public Patch(string? nom, string? nomPanel, string? type, string? emplacement, string? destination, string? description)
+        public Patch(string? nom, string? type, string? emplacement, string? destination, string? description)
         {
             Nom = nom;
-            NomPanel = nomPanel;
             Type = type;
             Emplacement = emplacement;
             Destination = destination;

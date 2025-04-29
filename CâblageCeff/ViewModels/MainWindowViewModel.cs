@@ -46,7 +46,7 @@ namespace CâblageCeff.ViewModels
             {
                 file = new FileInfo(file.FullName);
                 pkg = new ExcelPackage(file);
-                if (pkg.Workbook.Worksheets.Any())
+                if (pkg.Workbook.Worksheets.Count != 0)
                     ws = pkg.Workbook.Worksheets.First();
                 else
                     throw new InvalidOperationException("The Excel file contains no worksheets.");
@@ -77,7 +77,7 @@ namespace CâblageCeff.ViewModels
             }
 
             Panels = panels;
-            PanelCount = $"{panels.Count} patch panel(s)";
+            PanelCount = $"{Panels.Count} patch panel(s)";
         }
 
         [RelayCommand]
@@ -120,7 +120,7 @@ namespace CâblageCeff.ViewModels
         }
 
         [RelayCommand]
-        private void ChangeTheme()
+        private static void ChangeTheme()
         {
             Application.Current!.RequestedThemeVariant = Application.Current.RequestedThemeVariant == ThemeVariant.Light
                 ? ThemeVariant.Dark
@@ -128,7 +128,7 @@ namespace CâblageCeff.ViewModels
         }
 
         [RelayCommand]
-        private void Quitter()
+        private static void Quitter()
         {
             Environment.Exit(0);
         }
@@ -146,8 +146,8 @@ namespace CâblageCeff.ViewModels
             {
                 if (c != null)
                     //panels?.Remove(c);
-                    panels[panels.IndexOf(c)].Batiment = "";
-                    panels[panels.IndexOf(c)].Emplacement = "";
+                    panels[panels.IndexOf(c)].Batiment = null;
+                    panels[panels.IndexOf(c)].Emplacement = null;
                     panels[panels.IndexOf(c)].NbrPort = 0;
             }
             Panels = panels;
