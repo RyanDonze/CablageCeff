@@ -30,7 +30,10 @@ namespace CâblageCeff.ViewModels
 
         // UI Dialogs
         public delegate Task ShowPatchDialogFunc(Panel panel);
+        public delegate Task<Panel> ShowUpdatePanelDialogFunc(Panel panel);
         public ShowPatchDialogFunc? ShowPatchDialog { get; set; }
+        public ShowUpdatePanelDialogFunc? ShowUpdatePanelDialog { get; set; }
+
 
         public  MainWindowViewModel()
         {
@@ -78,6 +81,36 @@ namespace CâblageCeff.ViewModels
         }
 
         [RelayCommand]
+        private async Task AddPanel()
+        {
+            if (ShowUpdatePanelDialog == null)
+                return;
+            var panel = new Panel("", "", "", 0);
+            panel = await ShowUpdatePanelDialog(panel);
+            if (panel != null)
+            {
+                Panels?.Add(panel);
+                PanelCount = $"{Panels?.Count} patch panel(s)";
+            }
+        }
+
+        [RelayCommand]
+        private async Task EditPanel(Object c)
+        {
+            var panel = c as Panel;
+            if (panel == null || ShowUpdatePanelDialog == null)
+                return;
+            var result = await ShowUpdatePanelDialog(panel);
+            if (result != null)
+            {
+                var panels = Panels?.ToList();
+                panels[panels.IndexOf(panel)] = result;
+                Panels = panels;
+                PanelCount = $"{Panels?.Count} patch panel(s)";
+            }
+        }
+
+        [RelayCommand]
         private async Task OpenPatchScreen(Object c)
         {
             var panel = c as Panel;
@@ -118,7 +151,7 @@ namespace CâblageCeff.ViewModels
                     panels[panels.IndexOf(c)].NbrPort = 0;
             }
             Panels = panels;
-            PanelCount = $"{Panels?.Count} contact(s)";
+            PanelCount = $"{Panels?.Count} patch panel(s)";
         }
     }
 }

@@ -14,12 +14,16 @@ namespace CâblageCeff.ViewModels
         [ObservableProperty]
         private string? panelName;
 
+        [ObservableProperty]
+        private string? panelNbr;
+
         private Window? window;
 
         public PatchWindowViewModel(Models.Panel p, Window patchWindow)
         {
             panel = p;
             panelName = $"{p.Batiment}.{p.Emplacement}.{p.Nom} Patchs";
+            panelNbr = $"{p.NbrPort} patch(s)";
             window = patchWindow;
         }
 

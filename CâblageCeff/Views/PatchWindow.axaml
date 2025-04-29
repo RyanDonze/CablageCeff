@@ -93,7 +93,7 @@
 
 		<!-- Affichage du nombre de patch panels -->
 		<Grid Background="#4c5e70" Grid.Row="4">
-		<TextBlock Text="12 patch(s)" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontWeight="Bold" Foreground="White"/>
+		<TextBlock Text="{Binding PanelNbr}" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontWeight="Bold" Foreground="White"/>
 		</Grid>
 	</Grid>
 	

@@ -19,6 +19,7 @@ namespace CâblageCeff.Views
             if (vm != null)
             {
                 vm.ShowPatchDialog = ShowPatchDialog;
+                vm.ShowUpdatePanelDialog = ShowUpdatePanelDialog;
             }
         }
 
@@ -28,6 +29,17 @@ namespace CâblageCeff.Views
                 return;
             var contactDialog = new PatchWindow(panel);
             await contactDialog.ShowDialog(this);
+        }
+
+        private async Task<Models.Panel?> ShowUpdatePanelDialog(Models.Panel panel)
+        {
+            if (panel == null)
+                panel = new Models.Panel("","","",0);
+            var panelDialog = new UpdatePanelWindow(panel);
+            await panelDialog.ShowDialog(this);
+            if (panelDialog.Panel == null || panelDialog.Panel != panel)
+                return null;
+            return panelDialog.Panel;
         }
     }
 }
