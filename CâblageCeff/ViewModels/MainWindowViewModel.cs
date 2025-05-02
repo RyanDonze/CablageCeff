@@ -146,7 +146,6 @@ namespace CâblageCeff.ViewModels
             {
                 if (c != null)
                 {
-                    //panels?.Remove(c);
                     panels[panels.IndexOf(c)].Batiment = null;
                     panels[panels.IndexOf(c)].Emplacement = null;
                     panels[panels.IndexOf(c)].NbrPort = 0;
