@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CâblageCeff.ViewModels
 {
@@ -30,11 +31,14 @@ namespace CâblageCeff.ViewModels
         ExcelWorksheet? ws;
         Patch? patch;
 
+        // UI Dialogs
+        public delegate Task<Patch> ShowUpdatePatchDialogFunc(Patch patch);
+        public ShowUpdatePatchDialogFunc? ShowUpdatePatchDialog { get; set; }
+
         public PatchWindowViewModel(Models.Panel p, Window patchWindow)
         {
             panel = p;
             panelName = $"{p.Batiment}.{p.Emplacement}.{p.Nom} Patchs";
-            panelNbr = $"{p.NbrPort} patch(s)";
             window = patchWindow;
 
             List<Patch> patchs = [];
@@ -64,6 +68,22 @@ namespace CâblageCeff.ViewModels
 
             Patchs = patchs;
             PatchCount = $"{Patchs.Count} patch(s)";
+        }
+
+        [RelayCommand]
+        private async Task EditPatch(Object c)
+        {
+            var patch = c as Patch;
+            if (patch == null || ShowUpdatePatchDialog == null)
+                return;
+            var result = await ShowUpdatePatchDialog(patch);
+            if (result != null)
+            {
+                var patchs = Patchs?.ToList();
+                patchs[patchs.IndexOf(patch)] = result;
+                Patchs = patchs;
+                PatchCount = $"{Patchs?.Count} patch panel(s)";
+            }
         }
 
         [RelayCommand]

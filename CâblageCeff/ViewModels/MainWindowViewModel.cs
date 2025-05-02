@@ -145,10 +145,12 @@ namespace CâblageCeff.ViewModels
             foreach (var c in panelsToRemove)
             {
                 if (c != null)
+                {
                     //panels?.Remove(c);
                     panels[panels.IndexOf(c)].Batiment = null;
                     panels[panels.IndexOf(c)].Emplacement = null;
                     panels[panels.IndexOf(c)].NbrPort = 0;
+                }
             }
             Panels = panels;
             PanelCount = $"{Panels?.Count} patch panel(s)";
