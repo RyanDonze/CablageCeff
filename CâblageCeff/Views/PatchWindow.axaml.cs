@@ -4,6 +4,7 @@ using Avalonia.Markup.Xaml;
 using CâblageCeff.Models;
 using CâblageCeff.ViewModels;
 using System;
+using System.Threading.Tasks;
 
 namespace CâblageCeff;
 
@@ -15,5 +16,27 @@ public partial class PatchWindow : Window
         InitializeComponent();
         Panel = panel;
         DataContext = new PatchWindowViewModel(panel ,this);
+
+        var vm = DataContext as PatchWindowViewModel;
+        if (vm != null)
+        {
+            vm.ShowUpdatePatchDialog = ShowUpdatePatchDialog;
+        }
+    }
+
+    //private void RegisterInteractions(object? sender, EventArgs e)
+    //{
+        
+    //}
+
+    private async Task<Models.Patch> ShowUpdatePatchDialog(Models.Patch patch)
+    {
+        if (patch == null)
+            patch = new Models.Patch("", "", "", "", "");
+        var patchDialog = new UpdatePatchWindow(patch);
+        await patchDialog.ShowDialog(this);
+        if (patchDialog.Patch == null || patchDialog.Patch != patch)
+            return null;
+        return patchDialog.Patch;
     }
 }

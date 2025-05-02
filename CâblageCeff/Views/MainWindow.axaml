@@ -53,6 +53,10 @@
 						<MenuItem Header="Couper"/>
 						<MenuItem Header="Copier"/>
 						<MenuItem Header="Coller"/>
+						<Separator/>
+						<MenuItem Header="Ajouter" Command="{Binding AddPanelCommand}"/>
+						<MenuItem Header="Modifier" Command="{Binding EditPanelCommand}" CommandParameter="{Binding #PanelDataGrid.SelectedItem}"/>
+						<MenuItem Header="Supprimer" Command="{Binding DeletePanelCommand}" CommandParameter="{Binding #PanelDataGrid.SelectedItems}"/>
 					</MenuItem>
 					<MenuItem Header="Aide"  Foreground="White">
 						<MenuItem Header="Outils"/>
