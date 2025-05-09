@@ -46,17 +46,4 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </AvaloniaResource>
   </ItemGroup>
-
-  <ItemGroup>
-    <AvaloniaXaml Update="Views\UpdatePatchWindow.axaml">
-      <SubType>Designer</SubType>
-    </AvaloniaXaml>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Views\UpdatePatchWindow.axaml.cs">
-      <SubType>Code</SubType>
-      <DependentUpon>UpdatePatchWindow.axaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
 </Project>

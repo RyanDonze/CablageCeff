@@ -13,13 +13,16 @@ using CommunityToolkit.Mvvm.Input;
 using System.Threading.Tasks;
 using System.Collections;
 using CâblageCeff.Utils;
+using CâblageCeff.Views;
+using System.Collections.ObjectModel;
+
 
 namespace CâblageCeff.ViewModels
 {
     public partial class MainWindowViewModel : ViewModelBase
     {
         [ObservableProperty]
-        private List<Panel>? panels;
+        private ObservableCollection<Panel>? panels;
 
         [ObservableProperty]
         private string? panelCount;
@@ -29,11 +32,15 @@ namespace CâblageCeff.ViewModels
         ExcelWorksheet? ws;
         Panel? panel;
 
+        [ObservableProperty]
+        private Panel editablePanel = new Panel("", "", "",0);
+
         // UI Dialogs
         public delegate Task ShowPatchDialogFunc(Panel panel, DbModel context);
         public delegate Task<Panel> ShowUpdatePanelDialogFunc(Panel panel);
+
         public ShowPatchDialogFunc? ShowPatchDialog { get; set; }
-        public ShowUpdatePanelDialogFunc? ShowUpdatePanelDialog { get; set; }
+        //public ShowUpdatePanelDialogFunc? ShowUpdatePanelDialog { get; set; }
 
        
         public  MainWindowViewModel()
@@ -82,46 +89,49 @@ namespace CâblageCeff.ViewModels
 
                 Panels = context.Panels?.ToList();
                 PanelCount = $"{Panels?.Count} patch panel(s)";
-            
         }
 
         [RelayCommand]
         private async Task AddPanel()
         {
-            if (ShowUpdatePanelDialog == null)
-                return;
-            var panel = new Panel("", "", "", 0);
-            panel = await ShowUpdatePanelDialog(panel);
-            if (panel != null)
-            {
-                context.Panels?.Add(panel);
-                context.SaveChanges();
-                Panels = context.Panels?.ToList();
-                PanelCount = $"{Panels?.Count} patch panel(s)";
-            }
+
+            var panel = new Panel($"{Panels.Count + 1}", "", "", 0);
+           
+            context.Panels?.Add(panel);
+            context.SaveChanges();
+            Panels?.Add(panel);
+            PanelCount = $"{Panels?.Count} patch panel(s)";
+
+            EditablePanel = panel;
+
+            MainScreenIsVisible = false;
+            UpdatePanelScreenIsVisible = true;
         }
+
+        [ObservableProperty]
+        private bool mainScreenIsVisible = true;
+
+        [ObservableProperty]
+        private bool updatePanelScreenIsVisible = false;
 
         [RelayCommand]
         private async Task EditPanel(Object c)
         {
             var panel = c as Panel;
-            if (panel == null || ShowUpdatePanelDialog == null)
+            if (panel == null)
                 return;
-            var result = await ShowUpdatePanelDialog(panel);
-            if (result != null)
-            {
-                context.Panels.ToList()[context.Panels.ToList().IndexOf(panel)] = result;
-                context.SaveChanges();
-                Panels = context.Panels?.ToList();
-                PanelCount = $"{Panels?.Count} patch panel(s)";
-            }
+            EditablePanel = panel;
+            context.Panels.Update(panel);
+            context.SaveChanges();
+            MainScreenIsVisible = false;
+            UpdatePanelScreenIsVisible = true;
         }
 
         [RelayCommand]
         private async Task OpenPatchScreen(Object c)
         {
             var panel = c as Panel;
-            if (panel == null || ShowPatchDialog == null)
+            if (panel == null || ShowPatchDialog == null || panel.NbrPort == 0)
                 return;
             await ShowPatchDialog(panel,context);
         }
@@ -138,6 +148,17 @@ namespace CâblageCeff.ViewModels
         private static void Quitter()
         {
             Environment.Exit(0);
+        }
+
+        [RelayCommand]
+        private static void Restart()
+        {
+            var fileName = Environment.ProcessPath;
+            if (fileName != null)
+            {
+                System.Diagnostics.Process.Start(fileName);
+                Environment.Exit(0);
+            }
         }
 
         [RelayCommand]
@@ -159,8 +180,18 @@ namespace CâblageCeff.ViewModels
                     context.SaveChanges();
                 }
             }
+
             Panels = context.Panels.ToList();
             PanelCount = $"{Panels?.Count} patch panel(s)";
+        }
+
+        //--------------------------------------------------------------------------------------------------
+
+        [RelayCommand]
+        void Cancel()
+        {
+            MainScreenIsVisible = true;
+            UpdatePanelScreenIsVisible = false;
         }
     }
 }

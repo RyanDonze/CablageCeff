@@ -15,7 +15,6 @@ namespace CâblageCeff.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public uint PanelId { get; set; }
-
         [ObservableProperty]
         public partial string? Nom { get; set; }
         [ObservableProperty]
@@ -26,6 +25,7 @@ namespace CâblageCeff.Models
         public partial int? NbrPort { get; set; }
 
         public ObservableCollection<Patch>? Patchs { get; set; }
+
 
         public Panel(string? nom, string? batiment, string? emplacement, int? nbrPort)
         {

@@ -28,8 +28,6 @@ namespace CâblageCeff.Models
 
         public Panel? Panel { get; set; }
         public uint PanelId { get; set; }
-
-
         public Patch(string? nom, string? type, string? emplacement, string? destination, string? description)
         {
             Nom = nom;

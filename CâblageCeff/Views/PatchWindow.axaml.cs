@@ -20,7 +20,7 @@ public partial class PatchWindow : Window
         var vm = DataContext as PatchWindowViewModel;
         if (vm != null)
         {
-            vm.ShowUpdatePatchDialog = ShowUpdatePatchDialog;
+            //vm.ShowUpdatePatchDialog = ShowUpdatePatchDialog;
         }
     }
 
@@ -29,14 +29,14 @@ public partial class PatchWindow : Window
         
     //}
 
-    private async Task<Models.Patch> ShowUpdatePatchDialog(Models.Patch patch)
-    {
-        if (patch == null)
-            patch = new Models.Patch("", "", "", "", "");
-        var patchDialog = new UpdatePatchWindow(patch);
-        await patchDialog.ShowDialog(this);
-        if (patchDialog.Patch == null || patchDialog.Patch != patch)
-            return null;
-        return patchDialog.Patch;
-    }
+    //private async Task<Models.Patch> ShowUpdatePatchDialog(Models.Patch patch)
+    //{
+    //    if (patch == null)
+    //        patch = new Models.Patch("", "", "", "", "");
+    //    //var patchDialog = new UpdatePatchWindow(patch);
+    //    await patchDialog.ShowDialog(this);
+    //    if (patchDialog.Patch == null || patchDialog.Patch != patch)
+    //        return null;
+    //    return patchDialog.Patch;
+    //}
 }

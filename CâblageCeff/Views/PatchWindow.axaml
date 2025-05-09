@@ -9,14 +9,13 @@
         Icon="/Assets/CeffWeb.png"
         Title="CâblageCeff" Width="800" Height="450">
 
-	<!--xmlns:vm="using:CâblageCeff.ViewModels"
-
 	<Design.DataContext>
 		<vm:PatchWindowViewModel/>
 	</Design.DataContext>
-	-->
 
 	<Grid>
+	
+	<Grid x:Name="PatchScreen" IsVisible="{Binding PatchScreenIsVisible}">
 		<!-- Définition des colonnes et lignes pour la disposition -->
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*"/>
@@ -52,11 +51,9 @@
 				<ColumnDefinition Width="Auto"/>
 				<ColumnDefinition Width="Auto"/>
 				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
 			</Grid.ColumnDefinitions>
 			<Rectangle Grid.ColumnSpan="7" Fill="#7c8ea0" Height="55"/>
-			<Button Background="#e1e1e1" Width="45" Height="45" Margin="5">
-				<Image Height="40" Width="40" Source="/Assets/rowAdd.png"/>
-			</Button>
 			<Button Grid.Column="1" Command="{Binding DeletePatchCommand}" CommandParameter="{Binding #PatchDataGrid.SelectedItems}" Background="#e1e1e1" Width="45" Height="45" Margin="5">
 
 				<Image Height="40" Width="40" Source="/Assets/rowRemove.png"/>
@@ -64,7 +61,10 @@
 			<Button Grid.Column="2" Command="{Binding EditPatchCommand}" CommandParameter="{Binding #PatchDataGrid.SelectedItem}" Background="#e1e1e1" Width="45" Height="45" Margin="5">
 				<Image Height="35" Width="35" Source="/Assets/rowUpdate.png"/>
 			</Button>
-			<Button Grid.Column="3" Command="{Binding QuitterCommand}" Background="#e1e1e1" Width="45" Height="45" Margin="5">
+			<Button Grid.Column="3" Command="{Binding EditPatchsCommand}" CommandParameter="{Binding #PatchDataGrid.SelectedItems}" Background="#e1e1e1" Width="45" Height="45" Margin="5">
+				<Image Height="35" Width="35" Source="/Assets/multipleUpdate.png"/>
+			</Button>
+			<Button Grid.Column="4" Command="{Binding QuitterCommand}" Background="#e1e1e1" Width="45" Height="45" Margin="5">
 				<Image Height="35" Width="35" Source="/Assets/exit.png"/>
 			</Button>
 		</Grid>
@@ -97,5 +97,71 @@
 		<TextBlock Text="{Binding PatchCount}" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontWeight="Bold" Foreground="White"/>
 		</Grid>
 	</Grid>
-	
+
+		<Grid Name="UpdatePatchScreen" IsVisible="{Binding UpdatePatchScreenIsVisible}">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="Auto"/>
+			</Grid.RowDefinitions>
+
+
+			<!-- Menu -->
+			<DockPanel VerticalAlignment="Top">
+				<Grid Background="#2c3e50">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="32"/>
+					</Grid.RowDefinitions>
+					<Image Grid.Column="1" HorizontalAlignment="Right"  Height="45" Width="45" Source="/Assets/LogoCeffAlpha.png"/>
+
+				</Grid>
+			</DockPanel>
+
+			<Grid Background="#4c5e70" Grid.Row="1" Height="20">
+				<TextBlock Text="Patch Editor" Foreground="White" Margin="5" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold"/>
+			</Grid>
+			
+			<Grid Margin="10" Grid.Row="2">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
+
+				<TextBlock Text="Nom:" Grid.Row="0" Grid.Column="0" Margin="5"/>
+				<TextBox Text="{Binding EditablePatch.Nom}" Grid.Row="0" Grid.Column="1" Margin="5" IsEnabled="False"/>
+
+				<TextBlock Text="Type de patch:" Grid.Row="1" Grid.Column="0" Margin="5"/>
+				<TextBox Text="{Binding EditablePatch.Type}" Grid.Row="1" Grid.Column="1" Margin="5"/>
+
+				<TextBlock Text="Emplacement:" Grid.Row="2" Grid.Column="0" Margin="5"/>
+				<TextBox Text="{Binding EditablePatch.Emplacement}" Grid.Row="2" Grid.Column="1" Margin="5"/>
+
+				<TextBlock Text="Destination:" Grid.Row="3" Grid.Column="0" Margin="5"/>
+				<TextBox Text="{Binding EditablePatch.Destination}" Grid.Row="3" Grid.Column="1" Margin="5"/>
+
+				<TextBlock Text="Description:" Grid.Row="4" Grid.Column="0" Margin="5"/>
+				<TextBox Text="{Binding EditablePatch.Description}" Grid.Row="4" Height="110" TextWrapping="Wrap" Grid.Column="1" Margin="5"/>
+			</Grid>
+
+			<Grid Background="#4c5e70" Grid.Row="3">
+				<StackPanel Grid.Row="5" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
+					<Button Name="EditOK" IsVisible="{Binding IsOK}" Content="OK" Command="{Binding CancelCommand}" Margin="5"  Foreground="White"/>
+					<Button Name="EditMultipleOK" IsVisible="{Binding IsOKMultiple}" Content="OK" Command="{Binding CancelMultipleCommand}" Margin="5"  Foreground="White"/>
+				</StackPanel>
+			</Grid>
+		</Grid>
+	</Grid>
 </Window>
