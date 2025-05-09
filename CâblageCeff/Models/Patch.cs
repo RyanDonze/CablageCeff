@@ -10,15 +10,15 @@ namespace CâblageCeff.Models
     public partial class Patch : ObservableObject
     {
         [ObservableProperty]
-        private string? nom;
+        public string? nom;
         [ObservableProperty]
-        private string? type;
+        public string? type;
         [ObservableProperty]
-        private string? emplacement;
+        public string? emplacement;
         [ObservableProperty]
-        private string? destination;
+        public string? destination;
         [ObservableProperty]
-        private string? description;
+        public string? description;
 
         public Patch(string? nom, string? type, string? emplacement, string? destination, string? description)
         {

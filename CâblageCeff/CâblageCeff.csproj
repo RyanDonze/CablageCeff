@@ -25,24 +25,12 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="EPPlus" Version="8.0.1" />
     <PackageReference Include="EPPlus.Interfaces" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.4" />
   </ItemGroup>
 
   <ItemGroup>
     <AvaloniaResource Update="Assets\Liste des patch panel et numéro.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </AvaloniaResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <AvaloniaXaml Update="Views\UpdatePatchWindow.axaml">
-      <SubType>Designer</SubType>
-    </AvaloniaXaml>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Views\UpdatePatchWindow.axaml.cs">
-      <SubType>Code</SubType>
-      <DependentUpon>UpdatePatchWindow.axaml</DependentUpon>
-    </Compile>
   </ItemGroup>
 </Project>

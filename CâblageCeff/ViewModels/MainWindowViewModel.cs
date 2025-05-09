@@ -12,13 +12,15 @@ using Avalonia.Styling;
 using CommunityToolkit.Mvvm.Input;
 using System.Threading.Tasks;
 using System.Collections;
+using CâblageCeff.Views;
+using System.Collections.ObjectModel;
 
 namespace CâblageCeff.ViewModels
 {
     public partial class MainWindowViewModel : ViewModelBase
     {
         [ObservableProperty]
-        private List<Panel>? panels;
+        private ObservableCollection<Panel>? panels;
 
         [ObservableProperty]
         private string? panelCount;
@@ -28,11 +30,14 @@ namespace CâblageCeff.ViewModels
         ExcelWorksheet ws;
         Panel? panel;
 
+        [ObservableProperty]
+        private Panel editablePanel = new Panel("", "", "",0);
+
         // UI Dialogs
         public delegate Task ShowPatchDialogFunc(Panel panel);
-        public delegate Task<Panel> ShowUpdatePanelDialogFunc(Panel panel);
+        //public delegate Task<Panel> ShowUpdatePanelDialogFunc(Panel panel);
         public ShowPatchDialogFunc? ShowPatchDialog { get; set; }
-        public ShowUpdatePanelDialogFunc? ShowUpdatePanelDialog { get; set; }
+        //public ShowUpdatePanelDialogFunc? ShowUpdatePanelDialog { get; set; }
 
 
         public  MainWindowViewModel()
@@ -76,45 +81,68 @@ namespace CâblageCeff.ViewModels
                 subs.Clear();
             }
 
-            Panels = panels;
+            Panels = new ObservableCollection<Panel>(panels);
             PanelCount = $"{Panels.Count} patch panel(s)";
         }
 
         [RelayCommand]
         private async Task AddPanel()
         {
-            if (ShowUpdatePanelDialog == null)
-                return;
-            var panel = new Panel("", "", "", 0);
-            panel = await ShowUpdatePanelDialog(panel);
-            if (panel != null)
-            {
-                Panels?.Add(panel);
-                PanelCount = $"{Panels?.Count} patch panel(s)";
-            }
+            var panel = new Panel($"{Panels.Count + 1}", "", "", 0);
+
+            Panels?.Add(panel);
+            PanelCount = $"{Panels?.Count} patch panel(s)";
+
+            EditablePanel = panel;
+
+            MainScreenIsVisible = false;
+            UpdatePanelScreenIsVisible = true;
+
+            //if (ShowUpdatePanelDialog == null)
+            //    return;
+            //var panel = new Panel("", "", "", 0);
+            //panel = await ShowUpdatePanelDialog(panel);
+            //if (panel != null)
+            //{
+            //    Panels?.Add(panel);
+            //    PanelCount = $"{Panels?.Count} patch panel(s)";
+            //}
         }
+
+        [ObservableProperty]
+        private bool mainScreenIsVisible = true;
+
+        [ObservableProperty]
+        private bool updatePanelScreenIsVisible = false;
 
         [RelayCommand]
         private async Task EditPanel(Object c)
         {
             var panel = c as Panel;
-            if (panel == null || ShowUpdatePanelDialog == null)
+            if (panel == null)
                 return;
-            var result = await ShowUpdatePanelDialog(panel);
-            if (result != null)
-            {
-                var panels = Panels?.ToList();
-                panels[panels.IndexOf(panel)] = result;
-                Panels = panels;
-                PanelCount = $"{Panels?.Count} patch panel(s)";
-            }
+            EditablePanel = panel;
+
+            MainScreenIsVisible = false;
+            UpdatePanelScreenIsVisible = true;
+
+            //if (panel == null || ShowUpdatePanelDialog == null)
+            //    return;
+            //var result = await ShowUpdatePanelDialog(panel);
+            //if (result != null)
+            //{
+            //    var panels = Panels?.ToList();
+            //    panels[panels.IndexOf(panel)] = result;
+            //    Panels = panels;
+            //    PanelCount = $"{Panels?.Count} patch panel(s)";
+            //}
         }
 
         [RelayCommand]
         private async Task OpenPatchScreen(Object c)
         {
             var panel = c as Panel;
-            if (panel == null || ShowPatchDialog == null)
+            if (panel == null || ShowPatchDialog == null || panel.NbrPort == 0)
                 return;
             await ShowPatchDialog(panel);
         }
@@ -131,6 +159,17 @@ namespace CâblageCeff.ViewModels
         private static void Quitter()
         {
             Environment.Exit(0);
+        }
+
+        [RelayCommand]
+        private static void Restart()
+        {
+            var fileName = Environment.ProcessPath;
+            if (fileName != null)
+            {
+                System.Diagnostics.Process.Start(fileName);
+                Environment.Exit(0);
+            }
         }
 
         [RelayCommand]
@@ -151,8 +190,17 @@ namespace CâblageCeff.ViewModels
                     panels[panels.IndexOf(c)].NbrPort = 0;
                 }
             }
-            Panels = panels;
-            PanelCount = $"{Panels?.Count} patch panel(s)";
+            //Panels = panels;
+            //PanelCount = $"{Panels?.Count} patch panel(s)";
+        }
+
+        //--------------------------------------------------------------------------------------------------
+
+        [RelayCommand]
+        void Cancel()
+        {
+            MainScreenIsVisible = true;
+            UpdatePanelScreenIsVisible = false;
         }
     }
 }

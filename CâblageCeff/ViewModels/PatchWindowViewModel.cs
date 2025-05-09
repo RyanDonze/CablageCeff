@@ -32,9 +32,15 @@ namespace CâblageCeff.ViewModels
         ExcelPackage? pkg;
         ExcelWorksheet? ws;
         Patch? patch;
+
+        [ObservableProperty]
+        private Patch editablePatch = new Patch("", "", "", "", "");
+
+        private List<Patch> patchsToBeEdited;
+
         // UI Dialogs
-        public delegate Task<Patch> ShowUpdatePatchDialogFunc(Patch patch);
-        public ShowUpdatePatchDialogFunc? ShowUpdatePatchDialog { get; set; }
+        //public delegate Task<Patch> ShowUpdatePatchDialogFunc(Patch patch);
+        //public ShowUpdatePatchDialogFunc? ShowUpdatePatchDialog { get; set; }
         public PatchWindowViewModel(Models.Panel p, Window patchWindow)
         {
             int e = 1;
@@ -90,20 +96,71 @@ namespace CâblageCeff.ViewModels
             pkg.Save();
         }
 
+        [ObservableProperty]
+        private bool patchScreenIsVisible = true;
+
+        [ObservableProperty]
+        private bool updatePatchScreenIsVisible = false;
+
+        [ObservableProperty]
+        private bool isOK = true;
+
+        [ObservableProperty]
+        private bool isOKMultiple = false;
+
         [RelayCommand]
         private async Task EditPatch(Object c)
         {
             var patch = c as Patch;
-            if (patch == null || ShowUpdatePatchDialog == null)
+            if (patch == null)
                 return;
-            var result = await ShowUpdatePatchDialog(patch);
-            if (result != null)
+            EditablePatch = patch;
+
+            IsOK = true;
+            IsOKMultiple = false;
+            PatchScreenIsVisible = false;
+            UpdatePatchScreenIsVisible = true;
+
+            //if (patch == null || ShowUpdatePatchDialog == null)
+            //    return;
+            //var result = await ShowUpdatePatchDialog(patch);
+            //if (result != null)
+            //{
+            //    var patchs = Patchs?.ToList();
+            //    patchs[patchs.IndexOf(patch)] = result;
+            //    Patchs = patchs;
+            //    PatchCount = $"{Patchs?.Count} patch panel(s)";
+            //}
+        }
+
+        [RelayCommand]
+        private async Task EditPatchs(IList list)
+        {
+            if (list.Count == 0)
+                return;
+            var patchsToEdit = new Patch?[list.Count];
+            for (int i = 0; i < list.Count; i++)
             {
-                var patchs = Patchs?.ToList();
-                patchs[patchs.IndexOf(patch)] = result;
-                Patchs = patchs;
-                PatchCount = $"{Patchs?.Count} patch panel(s)";
+                patchsToEdit[i] = list[i] as Patch;
             }
+            var patchs = Patchs?.ToList();
+            EditablePatch = patchsToEdit[0];
+            PatchScreenIsVisible = false;
+            UpdatePatchScreenIsVisible = true;
+            IsOK = false;
+            IsOKMultiple = true;
+            foreach (var c in patchsToEdit)
+            {
+                if (c != null)
+                {
+                    patchs[patchs.IndexOf(c)].Type = EditablePatch.Type;
+                    patchs[patchs.IndexOf(c)].Emplacement = EditablePatch.Emplacement;
+                    patchs[patchs.IndexOf(c)].Destination = EditablePatch.Destination;
+                    patchs[patchs.IndexOf(c)].Description = EditablePatch.Description;
+                }
+            }
+            Patchs = patchs;
+            patchsToBeEdited = patchsToEdit.ToList();
         }
 
         [RelayCommand]
@@ -125,13 +182,41 @@ namespace CâblageCeff.ViewModels
             {
                 if (c != null)
                 {
-                patchs[patchs.IndexOf(c)].Type = null;
-                patchs[patchs.IndexOf(c)].Destination = null;
-                patchs[patchs.IndexOf(c)].Description = null;
+                    patchs[patchs.IndexOf(c)].Type = null;
+                    patchs[patchs.IndexOf(c)].Emplacement = null;
+                    patchs[patchs.IndexOf(c)].Destination = null;
+                    patchs[patchs.IndexOf(c)].Description = null;
                 }
             }
-            Patchs = patchs;
-            PatchCount = $"{Patchs?.Count} patch(s)";
+            //Patchs = patchs;
+            //PatchCount = $"{Patchs?.Count} patch(s)";
+        }
+
+        //--------------------------------------------------------------------------------------------------
+
+        [RelayCommand]
+        void Cancel()
+        {
+            PatchScreenIsVisible = true;
+            UpdatePatchScreenIsVisible = false;
+        }
+
+        [RelayCommand]
+        void CancelMultiple()
+        {
+            PatchScreenIsVisible = true;
+            UpdatePatchScreenIsVisible = false;
+
+            foreach (var c in patchsToBeEdited)
+            {
+                if (c != null)
+                {
+                    patchs[patchs.IndexOf(c)].Type = EditablePatch.Type;
+                    patchs[patchs.IndexOf(c)].Emplacement = EditablePatch.Emplacement;
+                    patchs[patchs.IndexOf(c)].Destination = EditablePatch.Destination;
+                    patchs[patchs.IndexOf(c)].Description = EditablePatch.Description;
+                }
+            }
         }
     }
 }

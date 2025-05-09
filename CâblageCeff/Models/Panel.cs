@@ -10,13 +10,13 @@ namespace CâblageCeff.Models
     public partial class Panel : ObservableObject
     {
         [ObservableProperty]
-        private string? nom;
+        public string? nom; // public partial
         [ObservableProperty]
-        private string? batiment;
+        public string? batiment;
         [ObservableProperty]
-        private string? emplacement;
+        public string? emplacement;
         [ObservableProperty]
-        private int? nbrPort;
+        public int? nbrPort; //Collection
 
         public Panel(string? nom, string? batiment, string? emplacement, int? nbrPort)
         {
