@@ -22,7 +22,7 @@ namespace CâblageCeff.ViewModels
     public partial class MainWindowViewModel : ViewModelBase
     {
         [ObservableProperty]
-        private ObservableCollection<Panel>? panels;
+        private List<Panel>? panels;
 
         [ObservableProperty]
         private string? panelCount;
@@ -92,10 +92,9 @@ namespace CâblageCeff.ViewModels
         }
 
         [RelayCommand]
-        private async Task AddPanel()
+        private Task AddPanel()
         {
-
-            var panel = new Panel($"{Panels.Count + 1}", "", "", 0);
+            var panel = new Panel($"{Panels?.Count + 1}", "", "", 0);
            
             context.Panels?.Add(panel);
             context.SaveChanges();
@@ -106,6 +105,7 @@ namespace CâblageCeff.ViewModels
 
             MainScreenIsVisible = false;
             UpdatePanelScreenIsVisible = true;
+            return Task.CompletedTask;
         }
 
         [ObservableProperty]
@@ -115,16 +115,15 @@ namespace CâblageCeff.ViewModels
         private bool updatePanelScreenIsVisible = false;
 
         [RelayCommand]
-        private async Task EditPanel(Object c)
+        private Task EditPanel(Object c)
         {
             var panel = c as Panel;
             if (panel == null)
-                return;
+                return Task.CompletedTask;
             EditablePanel = panel;
-            context.Panels.Update(panel);
-            context.SaveChanges();
             MainScreenIsVisible = false;
             UpdatePanelScreenIsVisible = true;
+            return Task.CompletedTask;
         }
 
         [RelayCommand]
@@ -190,6 +189,8 @@ namespace CâblageCeff.ViewModels
         [RelayCommand]
         void Cancel()
         {
+            context.Panels.Update(EditablePanel);
+            context.SaveChanges();
             MainScreenIsVisible = true;
             UpdatePanelScreenIsVisible = false;
         }
