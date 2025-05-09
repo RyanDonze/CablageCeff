@@ -57,7 +57,7 @@
 			<Button Background="#e1e1e1" Width="45" Height="45" Margin="5">
 				<Image Height="40" Width="40" Source="/Assets/rowAdd.png"/>
 			</Button>
-			<Button Grid.Column="1" Command="{Binding DeletePatchCommand}" CommandParameter="{Binding #PatchtDataGrid.SelectedItems}" Background="#e1e1e1" Width="45" Height="45" Margin="5">
+			<Button Grid.Column="1" Command="{Binding DeletePatchCommand}" CommandParameter="{Binding #PatchDataGrid.SelectedItems}" Background="#e1e1e1" Width="45" Height="45" Margin="5">
 
 				<Image Height="40" Width="40" Source="/Assets/rowRemove.png"/>
 			</Button>

@@ -11,11 +11,11 @@ namespace CâblageCeff;
 public partial class PatchWindow : Window
 {
     public Models.Panel? Panel { get; set; }
-    public PatchWindow(Models.Panel panel)
+    public PatchWindow(Models.Panel panel,Utils.DbModel context)
     {
         InitializeComponent();
         Panel = panel;
-        DataContext = new PatchWindowViewModel(panel ,this);
+        DataContext = new PatchWindowViewModel(panel ,this,context);
 
         var vm = DataContext as PatchWindowViewModel;
         if (vm != null)

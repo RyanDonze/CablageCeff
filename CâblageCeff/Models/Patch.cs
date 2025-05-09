@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,16 +11,24 @@ namespace CâblageCeff.Models
 {
     public partial class Patch : ObservableObject
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public uint PatchId { get; set; }
+
         [ObservableProperty]
-        private string? nom;
+        public partial string? Nom { get; set; }
         [ObservableProperty]
-        private string? type;
+        public partial string? Type { get; set; }
         [ObservableProperty]
-        private string? emplacement;
+        public partial string? Emplacement { get; set; }
         [ObservableProperty]
-        private string? destination;
+        public partial string? Destination { get; set; }
         [ObservableProperty]
-        private string? description;
+        public partial string? Description { get; set; }
+
+        public Panel? Panel { get; set; }
+        public uint PanelId { get; set; }
+
 
         public Patch(string? nom, string? type, string? emplacement, string? destination, string? description)
         {

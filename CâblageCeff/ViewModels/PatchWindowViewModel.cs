@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Controls.Converters;
 using CâblageCeff.Models;
+using CâblageCeff.Utils;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using OfficeOpenXml;
@@ -29,65 +30,34 @@ namespace CâblageCeff.ViewModels
 
         private readonly Window? window;
 
-        ExcelPackage? pkg;
-        ExcelWorksheet? ws;
         Patch? patch;
+        DbModel context;
         // UI Dialogs
         public delegate Task<Patch> ShowUpdatePatchDialogFunc(Patch patch);
         public ShowUpdatePatchDialogFunc? ShowUpdatePatchDialog { get; set; }
-        public PatchWindowViewModel(Models.Panel p, Window patchWindow)
+        public PatchWindowViewModel(Models.Panel p, Window patchWindow,DbModel contextPanel)
         {
-            int e = 1;
+            
+            contextPanel.Database.EnsureCreated();
+            context = contextPanel;
             panel = p;
             panelName = $"{p.Batiment}.{p.Emplacement}.{p.Nom} Patchs";
             window = patchWindow;
 
-            List<Patch> patchs = [];
-            List<string> subs = [];
-
-            FileInfo file = new("Assets//Liste des patch panel et numéro.xlsx");
-            file = new FileInfo(file.FullName);
-            pkg = new ExcelPackage(file);
-            if (pkg.Workbook.Worksheets.Count > 1)
+            if (contextPanel.Patchs?.Where(p => p.PanelId == panel.PanelId).Count() == 0)
             {
-                while (ws == null) { 
-                    for (int i = 1; i < pkg.Workbook.Worksheets.Count; i++)
-                    {
-                        if (pkg.Workbook.Worksheets[i].Name == panel.Nom)
-                        {
-                            ws = pkg.Workbook.Worksheets[i];
-                            break;
-                        }
-                    }
-                    if (ws == null)
-                    {
-                        pkg.Workbook.Worksheets.Add(panel.Nom);
-
-                    }
-                }
-            }  
-            else
-              throw new InvalidOperationException("The Excel file contains no worksheets.");
-
-            for (int i = 2; i <= panel.NbrPort + 1;i++)
-            {
-                
-                for(int j = 1; j <= 5;j++)
+                int e = 1;
+                for (int i = 2; i <= panel.NbrPort + 1; i++)
                 {
-                    if(ws.Cells[i, j] == null)
-                        break;
-                    subs.Add(ws.Cells[i, j].Text);
+                    patch = new Patch(e.ToString(), "", "", "", "");
+                    panel.Patchs?.Add(patch);
+                    contextPanel.Patchs.Add(patch);
+                    contextPanel.SaveChanges();
+                    e++;
                 }
-                patch = new Patch(e.ToString(), subs[1], subs[2], subs[3], subs[4]);
-                patchs.Add(patch);
-                subs.Clear();
-                ws.Cells[i, 1].Value = e;
-                e++;
             }
-
-            Patchs = patchs;
-            PatchCount = $"{Patchs.Count} patch(s)";
-            pkg.Save();
+                Patchs = contextPanel.Patchs?.Where(p => p.PanelId == panel.PanelId).ToList();
+                PatchCount = $"{Patchs?.Count} patch(s)";
         }
 
         [RelayCommand]
@@ -99,9 +69,11 @@ namespace CâblageCeff.ViewModels
             var result = await ShowUpdatePatchDialog(patch);
             if (result != null)
             {
-                var patchs = Patchs?.ToList();
+                
                 patchs[patchs.IndexOf(patch)] = result;
-                Patchs = patchs;
+                context.Patchs.Update(result);
+                context.SaveChanges();
+                Patchs = context.Patchs?.Where(p => p.PanelId == panel.PanelId).ToList();
                 PatchCount = $"{Patchs?.Count} patch panel(s)";
             }
         }
@@ -115,23 +87,27 @@ namespace CâblageCeff.ViewModels
         [RelayCommand]
         private void DeletePatch(IList list)
         {
-            var patchsToRemove = new Patch?[list.Count];
-            for (int i = 0; i < list.Count; i++)
-            {
-                patchsToRemove[i] = list[i] as Patch;
-            }
-            var patchs = Patchs?.ToList();
-            foreach (var c in patchsToRemove)
-            {
-                if (c != null)
+          
+                var patchsToRemove = new Patch?[list.Count];
+                for (int i = 0; i < list.Count; i++)
                 {
-                patchs[patchs.IndexOf(c)].Type = null;
-                patchs[patchs.IndexOf(c)].Destination = null;
-                patchs[patchs.IndexOf(c)].Description = null;
+                    patchsToRemove[i] = list[i] as Patch;
                 }
-            }
-            Patchs = patchs;
-            PatchCount = $"{Patchs?.Count} patch(s)";
+                var patchs = Patchs?.ToList();
+                foreach (var c in patchsToRemove)
+                {
+                    if (c != null)
+                    {
+                        patchs[patchs.IndexOf(c)].Type = null;
+                        patchs[patchs.IndexOf(c)].Destination = null;
+                        patchs[patchs.IndexOf(c)].Description = null;
+                        context.Patchs.Update(patchs[patchs.IndexOf(c)]);
+                        context.SaveChanges();
+                    }
+                }
+                Patchs = context.Patchs?.Where(p => p.PanelId == panel.PanelId).ToList();
+                PatchCount = $"{Patchs?.Count} patch(s)";
+            
         }
     }
 }

@@ -23,11 +23,11 @@ namespace CâblageCeff.Views
             }
         }
 
-        private async Task ShowPatchDialog(Models.Panel panel)
+        private async Task ShowPatchDialog(Models.Panel panel,Utils.DbModel context)
         {
             if (panel == null)
                 return;
-            var contactDialog = new PatchWindow(panel);
+            var contactDialog = new PatchWindow(panel,context);
             await contactDialog.ShowDialog(this);
         }
 
