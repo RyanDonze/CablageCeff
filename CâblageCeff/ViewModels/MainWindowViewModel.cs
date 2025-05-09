@@ -12,8 +12,10 @@ using Avalonia.Styling;
 using CommunityToolkit.Mvvm.Input;
 using System.Threading.Tasks;
 using System.Collections;
+using CâblageCeff.Utils;
 using CâblageCeff.Views;
 using System.Collections.ObjectModel;
+
 
 namespace CâblageCeff.ViewModels
 {
@@ -25,71 +27,78 @@ namespace CâblageCeff.ViewModels
         [ObservableProperty]
         private string? panelCount;
 
-
-        ExcelPackage pkg;
-        ExcelWorksheet ws;
+        DbModel context = new();
+        ExcelPackage? pkg;
+        ExcelWorksheet? ws;
         Panel? panel;
 
         [ObservableProperty]
         private Panel editablePanel = new Panel("", "", "",0);
 
         // UI Dialogs
-        public delegate Task ShowPatchDialogFunc(Panel panel);
-        //public delegate Task<Panel> ShowUpdatePanelDialogFunc(Panel panel);
+        public delegate Task ShowPatchDialogFunc(Panel panel, DbModel context);
+        public delegate Task<Panel> ShowUpdatePanelDialogFunc(Panel panel);
+
         public ShowPatchDialogFunc? ShowPatchDialog { get; set; }
         //public ShowUpdatePanelDialogFunc? ShowUpdatePanelDialog { get; set; }
 
-
+       
         public  MainWindowViewModel()
         {
+            context.Database.EnsureCreated();
+            if(context.Panels?.Count() == 0) { 
 
-            List<Panel> panels = [];
-            List<string> subs = [];
+                List<string> subs = [];
 
-            FileInfo file = new("Assets//Liste des patch panel et numéro.xlsx");
-            if(file.Exists)
-            {
-                file = new FileInfo(file.FullName);
-                pkg = new ExcelPackage(file);
-                if (pkg.Workbook.Worksheets.Count != 0)
-                    ws = pkg.Workbook.Worksheets.First();
-                else
-                    throw new InvalidOperationException("The Excel file contains no worksheets.");
-            }
-            else
-                throw new FileNotFoundException("The specified file does not exist.", file.FullName);
-            
-            
-            for (int i = 2; i <= 330;i++)
-            {
-                for (int j = 1; j <= 4;j++)
+                FileInfo file = new("Assets//Liste des patch panel et numéro.xlsx");
+                if (file.Exists)
                 {
-                    
-                    if (ws.Cells[i, j] == null)
-                        break;
-                    subs.Add(ws.Cells[i, j].Text);
-                }
-                if (subs[3] == "")
-                {
-                    panel = new(subs[0], subs[1], subs[2], 0);
+                    file = new FileInfo(file.FullName);
+                    pkg = new ExcelPackage(file);
+                    if (pkg.Workbook.Worksheets.Count != 0)
+                        ws = pkg.Workbook.Worksheets.First();
+                    else
+                        throw new InvalidOperationException("The Excel file contains no worksheets.");
                 }
                 else
+                    throw new FileNotFoundException("The specified file does not exist.", file.FullName);
+
+
+                for (int i = 2; i <= 330; i++)
                 {
-                    panel = new(subs[0], subs[1], subs[2], int.Parse(subs[3]));
+                    for (int j = 1; j <= 4; j++)
+                    {
+
+                        if (ws.Cells[i, j] == null)
+                            break;
+                        subs.Add(ws.Cells[i, j].Text);
+                    }
+                    if (subs[3] == "")
+                    {
+                        panel = new(subs[0], subs[1], subs[2], 0);
+                    }
+                    else
+                    {
+                        panel = new(subs[0], subs[1], subs[2], int.Parse(subs[3]));
+                    }
+                    context.Panels?.Add(panel);
+                    context.SaveChanges();
+                    subs.Clear();
                 }
-                panels.Add(panel);
-                subs.Clear();
             }
 
-            Panels = new ObservableCollection<Panel>(panels);
-            PanelCount = $"{Panels.Count} patch panel(s)";
+                Panels = context.Panels?.ToList();
+                PanelCount = $"{Panels?.Count} patch panel(s)";
         }
 
         [RelayCommand]
         private async Task AddPanel()
         {
-            var panel = new Panel($"{Panels.Count + 1}", "", "", 0);
 
+            var panel = new Panel($"{Panels.Count + 1}", "", "", 0);
+           
+            context.Panels?.Add(panel);
+            context.SaveChanges();
             Panels?.Add(panel);
             PanelCount = $"{Panels?.Count} patch panel(s)";
 
@@ -97,16 +106,6 @@ namespace CâblageCeff.ViewModels
 
             MainScreenIsVisible = false;
             UpdatePanelScreenIsVisible = true;
-
-            //if (ShowUpdatePanelDialog == null)
-            //    return;
-            //var panel = new Panel("", "", "", 0);
-            //panel = await ShowUpdatePanelDialog(panel);
-            //if (panel != null)
-            //{
-            //    Panels?.Add(panel);
-            //    PanelCount = $"{Panels?.Count} patch panel(s)";
-            //}
         }
 
         [ObservableProperty]
@@ -122,20 +121,10 @@ namespace CâblageCeff.ViewModels
             if (panel == null)
                 return;
             EditablePanel = panel;
-
+            context.Panels.Update(panel);
+            context.SaveChanges();
             MainScreenIsVisible = false;
             UpdatePanelScreenIsVisible = true;
-
-            //if (panel == null || ShowUpdatePanelDialog == null)
-            //    return;
-            //var result = await ShowUpdatePanelDialog(panel);
-            //if (result != null)
-            //{
-            //    var panels = Panels?.ToList();
-            //    panels[panels.IndexOf(panel)] = result;
-            //    Panels = panels;
-            //    PanelCount = $"{Panels?.Count} patch panel(s)";
-            //}
         }
 
         [RelayCommand]
@@ -144,7 +133,7 @@ namespace CâblageCeff.ViewModels
             var panel = c as Panel;
             if (panel == null || ShowPatchDialog == null || panel.NbrPort == 0)
                 return;
-            await ShowPatchDialog(panel);
+            await ShowPatchDialog(panel,context);
         }
 
         [RelayCommand]
@@ -180,18 +169,20 @@ namespace CâblageCeff.ViewModels
             {
                 panelsToRemove[i] = list[i] as Panel;
             }
-            var panels = Panels?.ToList();
+            
             foreach (var c in panelsToRemove)
             {
                 if (c != null)
                 {
-                    panels[panels.IndexOf(c)].Batiment = null;
-                    panels[panels.IndexOf(c)].Emplacement = null;
-                    panels[panels.IndexOf(c)].NbrPort = 0;
+                    context.Panels.ToList()[context.Panels.ToList().IndexOf(c)].Batiment = null;
+                    context.Panels.ToList()[context.Panels.ToList().IndexOf(c)].Emplacement = null;
+                    context.Panels.ToList()[context.Panels.ToList().IndexOf(c)].Patchs?.Clear();
+                    context.SaveChanges();
                 }
             }
-            //Panels = panels;
-            //PanelCount = $"{Panels?.Count} patch panel(s)";
+
+            Panels = context.Panels.ToList();
+            PanelCount = $"{Panels?.Count} patch panel(s)";
         }
 
         //--------------------------------------------------------------------------------------------------

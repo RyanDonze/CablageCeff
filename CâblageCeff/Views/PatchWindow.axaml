@@ -55,6 +55,7 @@
 			</Grid.ColumnDefinitions>
 			<Rectangle Grid.ColumnSpan="7" Fill="#7c8ea0" Height="55"/>
 			<Button Grid.Column="1" Command="{Binding DeletePatchCommand}" CommandParameter="{Binding #PatchDataGrid.SelectedItems}" Background="#e1e1e1" Width="45" Height="45" Margin="5">
+
 				<Image Height="40" Width="40" Source="/Assets/rowRemove.png"/>
 			</Button>
 			<Button Grid.Column="2" Command="{Binding EditPatchCommand}" CommandParameter="{Binding #PatchDataGrid.SelectedItem}" Background="#e1e1e1" Width="45" Height="45" Margin="5">

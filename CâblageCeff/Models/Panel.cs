@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,14 +12,20 @@ namespace CâblageCeff.Models
 {
     public partial class Panel : ObservableObject
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public uint PanelId { get; set; }
         [ObservableProperty]
-        public string? nom; // public partial
+        public partial string? Nom { get; set; }
         [ObservableProperty]
-        public string? batiment;
+        public partial string? Batiment { get; set; }
         [ObservableProperty]
-        public string? emplacement;
+        public partial string? Emplacement { get; set; }
         [ObservableProperty]
-        public int? nbrPort; //Collection
+        public partial int? NbrPort { get; set; }
+
+        public ObservableCollection<Patch>? Patchs { get; set; }
+
 
         public Panel(string? nom, string? batiment, string? emplacement, int? nbrPort)
         {
@@ -24,6 +33,7 @@ namespace CâblageCeff.Models
             Batiment = batiment;
             Emplacement = emplacement;
             NbrPort = nbrPort;
+            Patchs = new();
         }
     }
 }
